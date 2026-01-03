@@ -1,4 +1,4 @@
-package com.example.keri
+package com.keri.keri_app
 
 import io.flutter.embedding.android.FlutterActivity
 
