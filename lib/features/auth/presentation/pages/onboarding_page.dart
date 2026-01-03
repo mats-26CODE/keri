@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/values/app_colors.dart';
 import '../../../../core/values/app_sizes.dart';
-import '../../../../core/utils/app_text_styles.dart';
 import '../../../../shared/widgets/buttons/app_button.dart';
 import '../../../../shared/widgets/toggles/theme_toggle_icon.dart';
 import '../../../../shared/widgets/toggles/language_toggle.dart';
