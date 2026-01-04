@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
+import '../../providers/location_provider.dart';
 import '../../../../../core/values/app_colors.dart';
 import '../../../../../core/values/app_sizes.dart';
 import '../../../../../shared/widgets/buttons/app_button.dart';
@@ -61,6 +62,20 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
     }
   }
 
+  String _getButtonText() {
+    final currentStep = ref.read(registrationStepProvider);
+    final registrationData = ref.read(registrationProvider);
+
+    if (currentStep == 0) return 'Continue';
+
+    // For location step (business only)
+    if (registrationData.userRole == UserRole.business && currentStep == 2) {
+      return 'Confirm Location';
+    }
+
+    return 'Next';
+  }
+
   void _handleNext() async {
     final currentStep = ref.read(registrationStepProvider);
     final steps = _getSteps();
@@ -76,6 +91,28 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
     if (currentStep == 0) {
       final accepted = await TermsAcceptanceModal.show(context);
       if (accepted != true) return;
+    }
+
+    // Save location data and validate for business users
+    if (registrationData.userRole == UserRole.business && currentStep == 2) {
+      // Get location state from provider
+      final locationState = ref.read(locationProvider);
+
+      if (locationState.selectedLocation == null ||
+          locationState.locationName == null ||
+          locationState.locationName!.isEmpty) {
+        // Show error: Please select a location
+        return;
+      }
+
+      // Save location data to registration
+      ref
+          .read(registrationProvider.notifier)
+          .setLocation(
+            latitude: locationState.selectedLocation!.latitude,
+            longitude: locationState.selectedLocation!.longitude,
+            locationName: locationState.locationName!,
+          );
     }
 
     if (currentStep < steps.length - 1) {
@@ -154,11 +191,8 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
               ),
             ),
 
-            // Navigation Buttons (hide for location and OTP steps)
-            if (currentStep != steps.length - 1 &&
-                !(currentStep == 2 &&
-                    ref.watch(registrationProvider).userRole ==
-                        UserRole.business))
+            // Navigation Buttons (hide only for OTP step)
+            if (currentStep != steps.length - 1)
               Padding(
                 padding: const EdgeInsets.all(AppSizes.screenPaddingX),
                 child: Row(
@@ -188,7 +222,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                     Expanded(
                       flex: 2,
                       child: AppButton(
-                        text: currentStep == 0 ? 'Continue' : 'Next',
+                        text: _getButtonText(),
                         onPressed: _handleNext,
                       ),
                     ),
