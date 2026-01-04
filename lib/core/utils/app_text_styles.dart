@@ -110,4 +110,15 @@ class AppTextStyles {
     fontSize: fontSize ?? AppSizes.fontSizeSmall,
     color: color ?? (isDarkMode ? AppColors.dark.text : AppColors.light.text),
   );
+
+  // Select dropdown text style
+  static TextStyle selectDropdownTextStyle({
+    required bool isDarkMode,
+    Color? color,
+    double? fontSize,
+  }) => TextStyle(
+    fontFamily: 'Figtree',
+    fontSize: fontSize ?? AppSizes.fontSizeMedium,
+    color: color ?? (isDarkMode ? AppColors.dark.text : AppColors.light.text),
+  );
 }

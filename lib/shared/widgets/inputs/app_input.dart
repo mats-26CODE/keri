@@ -12,6 +12,8 @@ class AppInput extends StatelessWidget {
   final Widget? prefixIcon;
   final String? error;
   final int? maxLength;
+  final int? minLines;
+  final int? maxLines;
   final void Function(String)? onSubmitted;
   final void Function(String)? onChanged;
   final bool obscureText;
@@ -33,6 +35,8 @@ class AppInput extends StatelessWidget {
     this.hintText,
     this.prefixIcon,
     this.maxLength,
+    this.minLines,
+    this.maxLines = 1,
     this.error,
     this.onSubmitted,
     this.onChanged,
@@ -91,6 +95,8 @@ class AppInput extends StatelessWidget {
             focusNode: focusNode,
             keyboardType: keyboardType,
             maxLength: maxLength,
+            minLines: minLines,
+            maxLines: maxLines,
             obscureText: obscureText,
             cursorColor:
                 cursorColor ??

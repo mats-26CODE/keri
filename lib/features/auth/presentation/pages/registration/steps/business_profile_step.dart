@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../../../../../core/values/app_colors.dart';
 import '../../../../../../core/values/app_sizes.dart';
 import '../../../../../../shared/widgets/animations/fade_in_text.dart';
+import '../../../../../../shared/widgets/animations/slide_fade_in_animation.dart';
 import '../../../../../../shared/widgets/inputs/app_input.dart';
+import '../../../../../../shared/widgets/dropdowns/app_select_dropdown.dart';
+import '../../../../../../shared/widgets/profile/app_profile_picture.dart';
 import '../../../providers/registration_provider.dart';
 
 class BusinessProfileStep extends ConsumerStatefulWidget {
@@ -19,9 +22,23 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _businessNameController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _tinController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  File? _businessLogo;
+  String? _selectedCategory;
+
+  // Business categories
+  final List<AppSelectOption> _businessCategories = const [
+    AppSelectOption(value: 'restaurant', label: 'Restaurant & Food'),
+    AppSelectOption(value: 'retail', label: 'Retail & Shopping'),
+    AppSelectOption(value: 'pharmacy', label: 'Pharmacy & Healthcare'),
+    AppSelectOption(value: 'grocery', label: 'Grocery & Supermarket'),
+    AppSelectOption(value: 'electronics', label: 'Electronics & Technology'),
+    AppSelectOption(value: 'fashion', label: 'Fashion & Apparel'),
+    AppSelectOption(value: 'services', label: 'Services & Professional'),
+    AppSelectOption(value: 'logistics', label: 'Logistics & Transport'),
+    AppSelectOption(value: 'other', label: 'Other'),
+  ];
 
   @override
   void initState() {
@@ -30,7 +47,7 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
     _phoneController.text = registrationData.phoneNumber ?? '';
     _emailController.text = registrationData.businessEmail ?? '';
     _businessNameController.text = registrationData.businessName ?? '';
-    _categoryController.text = registrationData.businessCategory ?? '';
+    _selectedCategory = registrationData.businessCategory;
     _tinController.text = registrationData.tinNumber ?? '';
     _descriptionController.text = registrationData.shortDescription ?? '';
   }
@@ -40,7 +57,6 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
     _phoneController.dispose();
     _emailController.dispose();
     _businessNameController.dispose();
-    _categoryController.dispose();
     _tinController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -53,7 +69,7 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
           businessName: _businessNameController.text.trim(),
           businessEmail: _emailController.text.trim(),
           businessPhone: _phoneController.text.trim(),
-          businessCategory: _categoryController.text.trim(),
+          businessCategory: _selectedCategory ?? '',
           tinNumber: _tinController.text.trim(),
           shortDescription: _descriptionController.text.trim(),
         );
@@ -62,86 +78,63 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
         .setPhoneNumber(_phoneController.text.trim());
   }
 
+  void _handleImagePicked(File? image) {
+    setState(() {
+      _businessLogo = image;
+    });
+    // TODO: Store logo in registration provider when we add the field
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.screenPaddingX),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: AppSizes.spacingLarge),
+          const SizedBox(height: AppSizes.spacingMedium),
 
           // Title
-          FadeInText.heading(
-            text: 'Setup Your Business Profile',
-            textAlign: TextAlign.center,
-            fontSize: AppSizes.fontSizeXLarge,
-            duration: const Duration(milliseconds: 500),
+          SlideFadeInAnimation(
+            duration: const Duration(milliseconds: 300),
             delay: const Duration(milliseconds: 100),
+            beginOffset: const Offset(0, 0.1),
+            child: FadeInText.heading(
+              text: 'Setup Your Business Profile',
+              fontSize: AppSizes.fontSizeTitleXXLarge,
+              duration: const Duration(milliseconds: 300),
+              delay: const Duration(milliseconds: 100),
+            ),
           ),
 
           const SizedBox(height: AppSizes.spacingSmall),
 
           // Subtitle
-          FadeInText.body(
-            text: 'Describe your business by filling in the details below',
-            textAlign: TextAlign.center,
-            fontSize: AppSizes.fontSizeMedium,
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 200),
-          ),
-
-          const SizedBox(height: AppSizes.spacingXXLarge),
-
-          // Profile Picture Placeholder
-          Center(
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isDarkMode
-                    ? AppColors.dark.darkSurfaceGrayColor
-                    : AppColors.light.lightGrayColor,
-              ),
-              child: Stack(
-                children: [
-                  Center(
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedStore01,
-                      size: 60,
-                      color: isDarkMode
-                          ? AppColors.dark.mediumGrayColor
-                          : AppColors.light.mediumGrayColor,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isDarkMode
-                            ? AppColors.dark.primaryColor
-                            : AppColors.light.primaryColor,
-                      ),
-                      child: const HugeIcon(
-                        icon: HugeIcons.strokeRoundedPencilEdit02,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          SlideFadeInAnimation(
+            duration: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 100),
+            beginOffset: const Offset(0, 0.1),
+            child: FadeInText.body(
+              text: 'Describe your business by filling in the details below',
+              fontSize: AppSizes.fontSizeMedium,
+              duration: const Duration(milliseconds: 300),
+              delay: const Duration(milliseconds: 100),
             ),
           ),
 
-          const SizedBox(height: AppSizes.spacingXXLarge),
+          const SizedBox(height: AppSizes.spacingXLarge),
+
+          // Business Logo
+          AppProfilePicture(
+            size: 120,
+            imageFile: _businessLogo,
+            showEditButton: true,
+            onImagePicked: _handleImagePicked,
+            enableRotatingBorder: true,
+            borderWidth: 4,
+          ),
+
+          const SizedBox(height: AppSizes.spacingXLarge),
 
           // Phone Number Input
           AppInput(
@@ -151,21 +144,21 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
             hintText: 'Enter phone number',
             maxLength: 10,
             onChanged: (_) => _updateData(),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                '+255',
-                style: TextStyle(
-                  fontSize: AppSizes.fontSizeMedium,
-                  color: isDarkMode
-                      ? AppColors.dark.text
-                      : AppColors.light.text,
+            prefixIcon: IntrinsicWidth(
+              child: Center(
+                child: FadeInText.heading(
+                  text: "🇹🇿",
+                  textAlign: TextAlign.center,
+                  fontSize: AppSizes.fontSizeLarge,
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
                 ),
               ),
             ),
           ),
 
-          const SizedBox(height: AppSizes.spacingMedium),
+          const SizedBox(height: AppSizes.spacingSmall),
 
           // Email Input
           AppInput(
@@ -176,11 +169,14 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
             onChanged: (_) => _updateData(),
             prefixIcon: const Padding(
               padding: EdgeInsets.all(12.0),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedMail01, size: 20),
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedMailAtSign01,
+                size: AppSizes.iconSizeMedium,
+              ),
             ),
           ),
 
-          const SizedBox(height: AppSizes.spacingMedium),
+          const SizedBox(height: AppSizes.spacingSmall),
 
           // Business Name Input
           AppInput(
@@ -192,64 +188,63 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
             prefixIcon: const Padding(
               padding: EdgeInsets.all(12.0),
               child: HugeIcon(
-                icon: HugeIcons.strokeRoundedBuilding01,
-                size: 20,
+                icon: HugeIcons.strokeRoundedStore03,
+                size: AppSizes.iconSizeMedium,
               ),
             ),
           ),
 
-          const SizedBox(height: AppSizes.spacingMedium),
+          const SizedBox(height: AppSizes.spacingSmall),
 
-          // Business Category Input
-          AppInput(
-            controller: _categoryController,
-            keyboardType: TextInputType.text,
+          // Business Category Dropdown
+          AppSelectDropdown(
+            options: _businessCategories,
+            value: _selectedCategory,
             labelText: 'Business Category',
             hintText: 'Select business category',
-            onChanged: (_) => _updateData(),
-            suffixIcon: const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: HugeIcon(
-                icon: HugeIcons.strokeRoundedArrowDown01,
-                size: 20,
-              ),
+            prefixIcon: HugeIcon(
+              icon: HugeIcons.strokeRoundedGridView,
+              size: AppSizes.iconSizeMedium,
             ),
-            prefixIcon: const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedGrid, size: 20),
-            ),
+            onChanged: (value) {
+              setState(() {
+                _selectedCategory = value;
+              });
+              _updateData();
+            },
           ),
 
-          const SizedBox(height: AppSizes.spacingMedium),
+          const SizedBox(height: AppSizes.spacingSmall),
 
           // TIN Number Input
           AppInput(
             controller: _tinController,
             keyboardType: TextInputType.text,
-            labelText: 'TIN Number (Optional)',
+            labelText: 'TIN Number',
             hintText: 'Enter TIN number',
             onChanged: (_) => _updateData(),
             prefixIcon: const Padding(
               padding: EdgeInsets.all(12.0),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedFile02, size: 20),
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedFile02,
+                size: AppSizes.iconSizeMedium,
+              ),
             ),
           ),
 
-          const SizedBox(height: AppSizes.spacingMedium),
+          const SizedBox(height: AppSizes.spacingSmall),
 
           // Short Description Input
           AppInput(
             controller: _descriptionController,
             keyboardType: TextInputType.multiline,
-            labelText: 'Short Description',
+            labelText: 'Short Description (Optional)',
             hintText: 'Describe your business',
             maxLength: 200,
+            minLines: 4,
+            maxLines: 6,
             showCounterText: true,
             onChanged: (_) => _updateData(),
-            prefixIcon: const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: HugeIcon(icon: HugeIcons.strokeRoundedNoteEdit, size: 20),
-            ),
           ),
 
           const SizedBox(height: AppSizes.spacingLarge),

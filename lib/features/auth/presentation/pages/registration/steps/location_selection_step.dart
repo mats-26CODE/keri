@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../../../../core/values/app_colors.dart';
 import '../../../../../../core/values/app_sizes.dart';
 import '../../../../../../shared/widgets/animations/fade_in_text.dart';
+import '../../../../../../shared/widgets/animations/slide_fade_in_animation.dart';
 import '../../../../../../shared/widgets/inputs/app_input.dart';
 import '../../../../../../shared/widgets/buttons/app_button.dart';
 import '../../../providers/registration_provider.dart';
@@ -35,15 +36,19 @@ class _LocationSelectionStepState extends ConsumerState<LocationSelectionStep> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: AppSizes.spacingLarge),
+          const SizedBox(height: AppSizes.spacingMedium),
 
           // Title
-          FadeInText.heading(
-            text: "Great. Now let's set up your business location",
-            textAlign: TextAlign.start,
-            fontSize: AppSizes.fontSizeTitle,
-            duration: const Duration(milliseconds: 500),
+          SlideFadeInAnimation(
+            duration: const Duration(milliseconds: 300),
             delay: const Duration(milliseconds: 100),
+            beginOffset: const Offset(0, 0.1),
+            child: FadeInText.heading(
+              text: "Great. Now let's set up your business location",
+              fontSize: AppSizes.fontSizeTitleXXLarge,
+              duration: const Duration(milliseconds: 300),
+              delay: const Duration(milliseconds: 100),
+            ),
           ),
 
           const SizedBox(height: AppSizes.spacingXLarge),
@@ -112,16 +117,18 @@ class _LocationSelectionStepState extends ConsumerState<LocationSelectionStep> {
             ),
           ),
 
-          const SizedBox(height: AppSizes.spacingSmall),
+          const SizedBox(height: AppSizes.spacingLarge),
 
           // Helper Text
-          Text(
-            '*You can drag your map to accurately locate the address',
-            style: TextStyle(
+          SlideFadeInAnimation(
+            duration: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 150),
+            beginOffset: const Offset(0, 0.1),
+            child: FadeInText.body(
+              text: '*You can drag your map to accurately locate the address',
               fontSize: AppSizes.fontSizeSmall,
-              color: isDarkMode
-                  ? AppColors.dark.mediumGrayColor
-                  : AppColors.light.mediumGrayColor,
+              duration: const Duration(milliseconds: 300),
+              delay: const Duration(milliseconds: 150),
             ),
           ),
 
