@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hugeicons/styles/stroke_rounded.dart';
-import 'package:keri/shared/widgets/animations/animations.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../../../core/providers/language_provider.dart';
+import '../../../core/values/app_assets.dart';
 import '../../../core/values/app_colors.dart';
 import '../../../core/values/app_sizes.dart';
-import '../../../core/utils/app_text_styles.dart';
+import '../animations/fade_in_text.dart';
+import '../animations/scale_animation_tap_wrapper.dart';
 import '../bottom_sheets/app_bottom_sheet.dart';
 import '../pills/app_toggle_pill.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 class LanguageToggle extends ConsumerWidget {
   final double size;
@@ -61,11 +61,7 @@ class LanguageToggle extends ConsumerWidget {
                     : AppColors.light.text,
                 borderWidth: 2,
                 leadingIcon: isSelected
-                    ? HugeIcon(
-                        icon: HugeIconsStrokeRounded.checkmarkCircle02,
-                        strokeWidth: 2.0,
-                        size: AppSizes.iconSizeMedium,
-                      )
+                    ? HugeIcons.strokeRoundedCheckmarkCircle02
                     : null,
                 borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -83,25 +79,31 @@ class LanguageToggle extends ConsumerWidget {
     final language = ref.watch(languageProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    // Get flag image based on language
+    final flagImage = language == AppLanguage.english
+        ? AppAssets.englishFlag
+        : AppAssets.tzFlag;
+
     return ScaleAnimationTapWrapper(
       onTap: () => _showLanguageSelector(context, ref),
       child: Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: isDarkMode
-              ? AppColors.dark.darkSurfaceComplimentColor.withAlpha(180)
-              : AppColors.light.lightGrayColor.withAlpha(180),
           shape: BoxShape.circle,
+          border: Border.all(
+            color: isDarkMode
+                ? AppColors.dark.grayishBorderColor
+                : AppColors.light.grayishBorderColor,
+            width: 1,
+          ),
         ),
-        child: Center(
-          child: Text(
-            language.code.toUpperCase(),
-            style: AppTextStyles.buttonTextStyle(
-              isDarkMode: isDarkMode,
-              color: isDarkMode ? AppColors.dark.icon : AppColors.light.icon,
-              fontSize: size * 0.35,
-            ),
+        child: ClipOval(
+          child: Image.asset(
+            flagImage,
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
           ),
         ),
       ),
