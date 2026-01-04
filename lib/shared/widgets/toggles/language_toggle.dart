@@ -9,11 +9,12 @@ import '../animations/fade_in_text.dart';
 import '../animations/scale_animation_tap_wrapper.dart';
 import '../bottom_sheets/app_bottom_sheet.dart';
 import '../pills/app_toggle_pill.dart';
+import 'package:hugeicons/styles/stroke_rounded.dart';
 
 class LanguageToggle extends ConsumerWidget {
   final double size;
 
-  const LanguageToggle({super.key, this.size = 40});
+  const LanguageToggle({super.key, this.size = AppSizes.iconSizeXLarge});
 
   void _showLanguageSelector(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -47,21 +48,13 @@ class LanguageToggle extends ConsumerWidget {
                   ref.read(languageProvider.notifier).setLanguage(language);
                   Navigator.pop(context);
                 },
-                selectedBackgroundColor: isDarkMode
-                    ? AppColors.dark.primaryColor.withAlpha(50)
-                    : AppColors.light.primaryColor.withAlpha(10),
-                unselectedBackgroundColor: isDarkMode
-                    ? AppColors.dark.darkSurfaceGrayColor
-                    : AppColors.light.lightGrayColor,
-                selectedBorderColor: isDarkMode
-                    ? AppColors.dark.primaryColor
-                    : AppColors.light.primaryColor,
-                selectedTextColor: isDarkMode
-                    ? AppColors.dark.text
-                    : AppColors.light.text,
                 borderWidth: 2,
                 leadingIcon: isSelected
-                    ? HugeIcons.strokeRoundedCheckmarkCircle02
+                    ? HugeIcon(
+                        icon: HugeIconsStrokeRounded.checkmarkCircle02,
+                        strokeWidth: 2.0,
+                        size: AppSizes.iconSizeMedium,
+                      )
                     : null,
                 borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
                 mainAxisAlignment: MainAxisAlignment.start,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../../../../../core/values/app_colors.dart';
 import '../../../../../../core/values/app_sizes.dart';
 import '../../../../../../shared/widgets/animations/fade_in_text.dart';
 import '../../../../../../shared/widgets/animations/slide_fade_in_animation.dart';
@@ -14,16 +13,14 @@ class ChooseRoleStep extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
     final registrationData = ref.watch(registrationProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.screenPaddingX),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: AppSizes.spacingMedium),
           // Title
           SlideFadeInAnimation(
             duration: const Duration(milliseconds: 500),
@@ -31,8 +28,7 @@ class ChooseRoleStep extends ConsumerWidget {
             beginOffset: const Offset(0, 0.3),
             child: FadeInText.heading(
               text: 'How will you use the app',
-              textAlign: TextAlign.center,
-              fontSize: AppSizes.fontSizeXXLarge,
+              fontSize: AppSizes.fontSizeTitleXXLarge,
               duration: const Duration(milliseconds: 500),
               delay: const Duration(milliseconds: 200),
             ),
@@ -43,13 +39,12 @@ class ChooseRoleStep extends ConsumerWidget {
           // Subtitle
           FadeInText.body(
             text: 'Choose the option that best describes you.',
-            textAlign: TextAlign.center,
             fontSize: AppSizes.fontSizeLarge,
             duration: const Duration(milliseconds: 500),
             delay: const Duration(milliseconds: 300),
           ),
 
-          const SizedBox(height: AppSizes.spacingXXLarge),
+          const SizedBox(height: AppSizes.spacingLarge),
 
           // Personal Use Option
           SlideFadeInAnimation(
@@ -65,23 +60,12 @@ class ChooseRoleStep extends ConsumerWidget {
                     .setUserRole(UserRole.personal);
               },
               padding: const EdgeInsets.all(AppSizes.spacingLarge),
+              mainAxisAlignment: MainAxisAlignment.start,
               borderWidth: 2,
-              selectedBackgroundColor: isDarkMode
-                  ? AppColors.dark.primaryColor.withAlpha(50)
-                  : AppColors.light.primaryColor.withAlpha(30),
-              unselectedBackgroundColor: isDarkMode
-                  ? AppColors.dark.darkSurfaceGrayColor
-                  : AppColors.light.lightGrayColor,
-              selectedBorderColor: isDarkMode
-                  ? AppColors.dark.primaryColor
-                  : AppColors.light.primaryColor,
-              unselectedBorderColor: isDarkMode
-                  ? AppColors.dark.grayishBorderColor
-                  : AppColors.light.grayishBorderColor,
               borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
               leadingIcon: const HugeIcon(
-                icon: HugeIcons.strokeRoundedUser,
-                size: 32,
+                icon: HugeIcons.strokeRoundedAiUser,
+                size: AppSizes.iconSizeRegularPlus,
               ),
               textSize: AppSizes.fontSizeLarge,
             ),
@@ -103,23 +87,12 @@ class ChooseRoleStep extends ConsumerWidget {
                     .setUserRole(UserRole.business);
               },
               padding: const EdgeInsets.all(AppSizes.spacingLarge),
+              mainAxisAlignment: MainAxisAlignment.start,
               borderWidth: 2,
-              selectedBackgroundColor: isDarkMode
-                  ? AppColors.dark.primaryColor.withAlpha(50)
-                  : AppColors.light.primaryColor.withAlpha(30),
-              unselectedBackgroundColor: isDarkMode
-                  ? AppColors.dark.darkSurfaceGrayColor
-                  : AppColors.light.lightGrayColor,
-              selectedBorderColor: isDarkMode
-                  ? AppColors.dark.primaryColor
-                  : AppColors.light.primaryColor,
-              unselectedBorderColor: isDarkMode
-                  ? AppColors.dark.grayishBorderColor
-                  : AppColors.light.grayishBorderColor,
               borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
               leadingIcon: const HugeIcon(
-                icon: HugeIcons.strokeRoundedStore01,
-                size: 32,
+                icon: HugeIcons.strokeRoundedStore03,
+                size: AppSizes.iconSizeRegularPlus,
               ),
               textSize: AppSizes.fontSizeLarge,
             ),
@@ -129,4 +102,3 @@ class ChooseRoleStep extends ConsumerWidget {
     );
   }
 }
-

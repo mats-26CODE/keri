@@ -5,9 +5,11 @@ This directory contains reusable animation widgets to enhance the user experienc
 ## Available Animations
 
 ### 1. FadeInAnimation
+
 A generic fade-in animation wrapper that can be applied to any widget.
 
 **Usage:**
+
 ```dart
 FadeInAnimation(
   duration: const Duration(milliseconds: 600),
@@ -18,6 +20,7 @@ FadeInAnimation(
 ```
 
 **Parameters:**
+
 - `child` (required): The widget to animate
 - `duration`: Animation duration (default: 600ms)
 - `delay`: Delay before starting animation (default: 0ms)
@@ -26,9 +29,11 @@ FadeInAnimation(
 ---
 
 ### 2. SlideFadeInAnimation
+
 Combines slide and fade animations for a smooth entrance effect.
 
 **Usage:**
+
 ```dart
 SlideFadeInAnimation(
   duration: const Duration(milliseconds: 800),
@@ -39,6 +44,7 @@ SlideFadeInAnimation(
 ```
 
 **Parameters:**
+
 - `child` (required): The widget to animate
 - `duration`: Animation duration (default: 600ms)
 - `delay`: Delay before starting animation (default: 0ms)
@@ -52,11 +58,13 @@ SlideFadeInAnimation(
 ---
 
 ### 3. FadeInText
+
 A specialized text widget with fade-in animation that integrates with `AppTextStyles`.
 
 **Factory Constructors:**
 
 #### FadeInText.heading()
+
 ```dart
 FadeInText.heading(
   text: 'Welcome to Keri',
@@ -68,6 +76,7 @@ FadeInText.heading(
 ```
 
 #### FadeInText.title()
+
 ```dart
 FadeInText.title(
   text: 'Fast Delivery',
@@ -78,6 +87,7 @@ FadeInText.title(
 ```
 
 #### FadeInText.body()
+
 ```dart
 FadeInText.body(
   text: 'Get your packages delivered quickly and safely',
@@ -88,6 +98,7 @@ FadeInText.body(
 ```
 
 #### FadeInText.subtitle()
+
 ```dart
 FadeInText.subtitle(
   text: 'Reliable Service',
@@ -96,6 +107,7 @@ FadeInText.subtitle(
 ```
 
 #### FadeInText.caption()
+
 ```dart
 FadeInText.caption(
   text: 'Terms and conditions apply',
@@ -104,6 +116,7 @@ FadeInText.caption(
 ```
 
 **Parameters:**
+
 - `text` (required): The text to display
 - `color`: Custom text color (optional)
 - `fontSize`: Custom font size (optional)
@@ -116,10 +129,45 @@ FadeInText.caption(
 
 ---
 
-### 4. ScaleAnimationTapWrapper
-A tap wrapper that adds a scale animation when pressed (already exists).
+### 4. AnimatedThemeWrapper
+
+Provides smooth animated transitions when the theme changes (light/dark mode).
 
 **Usage:**
+
+```dart
+AnimatedThemeWrapper(
+  theme: currentTheme,
+  duration: const Duration(milliseconds: 600),
+  curve: Curves.easeInOutCubic,
+  child: MaterialApp(...),
+)
+```
+
+**Features:**
+
+- Fade animation for smooth transition
+- Subtle scale effect with elastic bounce
+- Color gradient overlay that animates
+- Staggered animations for a polished feel
+
+**Parameters:**
+
+- `child` (required): The widget to wrap (usually MaterialApp)
+- `theme` (required): The current ThemeData
+- `duration`: Animation duration (default: 600ms)
+- `curve`: Animation curve (default: Curves.easeInOutCubic)
+
+**Note:** This is already integrated into `main.dart` and will automatically animate when you toggle between light and dark themes.
+
+---
+
+### 5. ScaleAnimationTapWrapper
+
+A tap wrapper that adds a scale animation when pressed.
+
+**Usage:**
+
 ```dart
 ScaleAnimationTapWrapper(
   onTap: () => print('Tapped!'),
@@ -132,6 +180,7 @@ ScaleAnimationTapWrapper(
 ## Examples
 
 ### Staggered Text Animations
+
 Create a beautiful staggered effect by increasing the delay for each text element:
 
 ```dart
@@ -154,6 +203,7 @@ Column(
 ```
 
 ### Combining Animations
+
 Mix different animations for rich effects:
 
 ```dart
@@ -173,6 +223,7 @@ Column(
 ```
 
 ### List Item Animations
+
 Animate list items with staggered delays:
 
 ```dart
@@ -209,4 +260,3 @@ ListView.builder(
 - Keep animation durations under 1000ms
 - Use `RepaintBoundary` for complex animated widgets
 - Consider disabling animations for accessibility preferences
-

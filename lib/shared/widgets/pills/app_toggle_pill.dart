@@ -65,22 +65,20 @@ class AppTogglePill extends StatelessWidget {
           color: isSelected
               ? selectedBackgroundColor ??
                     (isDarkMode
-                        ? AppColors.dark.primaryColor
-                        : AppColors.light.primaryColor)
+                        ? AppColors.dark.primaryColor.withAlpha(50)
+                        : AppColors.light.primaryColor.withAlpha(30))
               : unselectedBackgroundColor ??
                     (isDarkMode
-                        ? AppColors.dark.darkSurfaceComplimentColor.withAlpha(
-                            50,
-                          )
-                        : AppColors.light.primaryColor.withAlpha(5)),
+                        ? AppColors.dark.darkSurfaceGrayColor
+                        : AppColors.light.lightGrayColor),
           borderRadius:
               borderRadius ?? BorderRadius.circular(AppSizes.fullBorderRadius),
           border: Border.all(
             color: isSelected
                 ? selectedBorderColor ??
                       (isDarkMode
-                          ? AppColors.dark.grayishBorderColor
-                          : AppColors.light.grayishBorderColor)
+                          ? AppColors.dark.primaryColor
+                          : AppColors.light.primaryColor)
                 : unselectedBorderColor ??
                       (isDarkMode
                           ? AppColors.dark.grayishBorderColor

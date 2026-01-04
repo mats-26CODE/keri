@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/values/app_colors.dart';
+import '../../../core/values/app_sizes.dart';
 import '../animations/scale_animation_tap_wrapper.dart';
 
 class ThemeToggleIcon extends ConsumerWidget {
   final double size;
 
-  const ThemeToggleIcon({super.key, this.size = 40});
+  const ThemeToggleIcon({super.key, this.size = AppSizes.iconSizeXLarge});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

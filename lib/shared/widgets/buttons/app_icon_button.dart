@@ -70,7 +70,7 @@ class AppIconButton extends StatelessWidget {
                             : AppColors.light.primaryColor,
                         isDarkMode
                             ? AppColors.dark.darkSurfaceComplimentColor
-                            : AppColors.light.primaryDeepColor,
+                            : AppColors.light.primaryColor,
                       ],
                     )
                   : null,

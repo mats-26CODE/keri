@@ -23,6 +23,7 @@ class AppSizes {
   static const double iconSizeSmall = 16.0;
   static const double iconSizeMedium = 20.0;
   static const double iconSizeRegular = 24.0;
+  static const double iconSizeRegularPlus = 28.0;
   static const double iconSizeLarge = 32.0;
   static const double iconSizeXLarge = 40.0;
   static const double iconButtonSize = 48.0;

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/values/app_colors.dart';
 import '../../../../core/values/app_sizes.dart';
 import '../../../../shared/widgets/buttons/app_button.dart';
+import '../../../../shared/widgets/indicators/app_page_indicator.dart';
 import '../../../../shared/widgets/toggles/theme_toggle_icon.dart';
 import '../../../../shared/widgets/toggles/language_toggle.dart';
 import '../../../../shared/widgets/animations/fade_in_text.dart';
@@ -77,15 +78,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
                 SizedBox(height: AppSizes.spacingLarge),
                 // Page Indicators
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    slides.length,
-                    (index) => _PageIndicator(
-                      isActive: index == _currentPage,
-                      isDarkMode: isDarkMode,
-                    ),
-                  ),
+                AppPageIndicator(
+                  totalSteps: slides.length,
+                  currentStep: _currentPage,
+                  isDarkMode: isDarkMode,
                 ),
                 SizedBox(height: AppSizes.spacingMedium),
                 // Action Button
@@ -167,32 +163,6 @@ class _OnboardingSlideWidget extends StatelessWidget {
             curve: Curves.easeOut,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _PageIndicator extends StatelessWidget {
-  final bool isActive;
-  final bool isDarkMode;
-
-  const _PageIndicator({required this.isActive, required this.isDarkMode});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppSizes.spacingSmall / 4),
-      width: isActive
-          ? AppSizes.indicatorActiveWidth
-          : AppSizes.indicatorInactiveWidth,
-      height: AppSizes.indicatorHeight,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSizes.indicatorHeight / 2),
-        color: isActive
-            ? AppColors.light.primaryColor.withAlpha(140)
-            : (isDarkMode
-                  ? AppColors.dark.darkSurfaceGrayColor
-                  : AppColors.light.lightGrayColor),
       ),
     );
   }

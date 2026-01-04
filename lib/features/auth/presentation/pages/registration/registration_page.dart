@@ -5,9 +5,10 @@ import '../../../../../core/values/app_colors.dart';
 import '../../../../../core/values/app_sizes.dart';
 import '../../../../../shared/widgets/buttons/app_button.dart';
 import '../../../../../shared/widgets/buttons/app_icon_button.dart';
+import '../../../../../shared/widgets/indicators/app_page_indicator.dart';
 import '../../models/registration_data.dart';
 import '../../providers/registration_provider.dart';
-import '../../widgets/terms_acceptance_bottom_sheet.dart';
+import '../../widgets/modals/terms_acceptance_bottom_sheet.dart';
 import 'steps/choose_role_step.dart';
 import 'steps/personal_profile_step.dart';
 import 'steps/business_profile_step.dart';
@@ -117,47 +118,28 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
             Padding(
               padding: const EdgeInsets.all(AppSizes.screenPaddingX),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Back Button
                   AppIconButton(
                     icon: const HugeIcon(
-                      icon: HugeIcons.strokeRoundedArrowLeft01,
-                      size: 24,
+                      icon: HugeIcons.strokeRoundedArrowLeft02,
+                      size: AppSizes.iconSizeLarge,
                     ),
                     onPressed: _handleBack,
-                    isOutlined: false,
-                    size: 40,
+                    isOutlined: true,
+                    size: AppSizes.iconSizeLarge,
+                    borderColor: Colors.transparent,
+                    iconColor: isDarkMode
+                        ? AppColors.dark.icon
+                        : AppColors.light.icon,
                   ),
-                  const Spacer(),
                   // Progress Indicators
-                  ...List.generate(
-                    steps.length,
-                    (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: index == currentStep ? 24 : 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: index == currentStep
-                            ? (isDarkMode
-                                  ? AppColors.dark.primaryColor
-                                  : AppColors.light.primaryColor)
-                            : (isDarkMode
-                                  ? AppColors.dark.mediumGrayColor
-                                  : AppColors.light.mediumGrayColor),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  // Close Button
-                  AppIconButton(
-                    icon: const HugeIcon(
-                      icon: HugeIcons.strokeRoundedCancel01,
-                      size: 24,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                    isOutlined: false,
-                    size: 40,
+                  AppPageIndicator(
+                    totalSteps: steps.length,
+                    currentStep: currentStep,
+                    isDarkMode: isDarkMode,
                   ),
                 ],
               ),

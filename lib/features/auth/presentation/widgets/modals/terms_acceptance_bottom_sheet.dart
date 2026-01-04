@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../core/values/app_colors.dart';
-import '../../../../core/values/app_sizes.dart';
-import '../../../../core/utils/app_text_styles.dart';
-import '../../../../shared/widgets/animations/fade_in_text.dart';
-import '../../../../shared/widgets/buttons/app_button.dart';
+import '../../../../../core/values/app_colors.dart';
+import '../../../../../core/values/app_sizes.dart';
+import '../../../../../core/utils/app_text_styles.dart';
+import '../../../../../shared/widgets/animations/fade_in_text.dart';
+import '../../../../../shared/widgets/buttons/app_button.dart';
 
 class TermsAcceptanceBottomSheet extends StatelessWidget {
   final VoidCallback onAccept;
