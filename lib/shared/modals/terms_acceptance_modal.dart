@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
-import '../../../../../core/config/app_constants.dart';
-import '../../../../../core/values/app_colors.dart';
-import '../../../../../core/values/app_sizes.dart';
-import '../../../../../core/utils/app_text_styles.dart';
-import '../../../../../core/utils/url_launcher_helper.dart';
-import '../../../../../shared/widgets/animations/fade_in_text.dart';
-import '../../../../../shared/widgets/bottom_sheets/app_bottom_sheet.dart';
-import '../../../../../shared/widgets/buttons/app_button.dart';
+import '../../core/config/app_constants.dart';
+import '../../core/values/app_colors.dart';
+import '../../core/values/app_sizes.dart';
+import '../../core/utils/app_text_styles.dart';
+import '../../core/utils/url_launcher_helper.dart';
+import '../widgets/animations/fade_in_text.dart';
+import '../widgets/bottom_sheets/app_bottom_sheet.dart';
+import '../widgets/buttons/app_button.dart';
 
 class TermsAcceptanceModal {
   static Future<bool?> show(BuildContext context) {
