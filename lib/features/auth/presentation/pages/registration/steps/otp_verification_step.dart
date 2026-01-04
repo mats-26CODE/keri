@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../../core/values/app_colors.dart';
+import 'package:keri/shared/widgets/animations/animations.dart';
 import '../../../../../../core/values/app_sizes.dart';
 import '../../../../../../shared/widgets/animations/fade_in_text.dart';
-import '../../../../../../shared/widgets/buttons/app_button.dart';
-import '../../../../../../shared/widgets/inputs/app_input.dart';
+import '../../../../../../shared/widgets/animations/scale_animation_tap_wrapper.dart';
+import '../../../../../../shared/widgets/inputs/app_otp_input.dart';
 import '../../../providers/registration_provider.dart';
 
 class OtpVerificationStep extends ConsumerStatefulWidget {
@@ -17,109 +18,146 @@ class OtpVerificationStep extends ConsumerStatefulWidget {
 
 class _OtpVerificationStepState extends ConsumerState<OtpVerificationStep> {
   final TextEditingController _otpController = TextEditingController();
+  String? _errorMessage;
+  Timer? _timer;
+  int _resendCountdown = 60;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _otpController.dispose();
     super.dispose();
   }
 
-  void _handleVerify() {
-    final otp = _otpController.text.trim();
+  void _startTimer() {
+    setState(() {
+      _resendCountdown = 60;
+    });
+
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_resendCountdown > 0) {
+        setState(() {
+          _resendCountdown--;
+        });
+      } else {
+        _timer?.cancel();
+      }
+    });
+  }
+
+  void _handleVerify(String otp) {
     if (otp.length == 6) {
+      setState(() {
+        _errorMessage = null;
+      });
       ref.read(registrationProvider.notifier).setOtp(otp);
       // TODO: Implement OTP verification logic
       // On success, navigate to home
       Navigator.of(context).pushReplacementNamed('/home');
+    } else {
+      setState(() {
+        _errorMessage = 'Please enter a valid 6-digit code';
+      });
     }
   }
 
   void _handleResend() {
-    // TODO: Implement resend OTP logic
+    if (_resendCountdown == 0) {
+      // TODO: Implement resend OTP logic
+      setState(() {
+        _errorMessage = null;
+        _otpController.clear();
+      });
+      _startTimer();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.screenPaddingX),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: AppSizes.spacingMedium),
+
           // Title
-          FadeInText.heading(
-            text: 'Verify Phone Number',
-            textAlign: TextAlign.center,
-            fontSize: AppSizes.fontSizeXXLarge,
-            duration: const Duration(milliseconds: 500),
+          SlideFadeInAnimation(
+            duration: const Duration(milliseconds: 300),
             delay: const Duration(milliseconds: 100),
+            beginOffset: const Offset(0, 0.1),
+            child: FadeInText.heading(
+              text: 'Verify Phone Number',
+              fontSize: AppSizes.fontSizeTitleXXLarge,
+              duration: const Duration(milliseconds: 300),
+              delay: const Duration(milliseconds: 100),
+            ),
           ),
 
           const SizedBox(height: AppSizes.spacingSmall),
 
           // Subtitle
-          FadeInText.body(
-            text: 'Enter verification code received via SMS',
-            textAlign: TextAlign.center,
-            fontSize: AppSizes.fontSizeMedium,
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 200),
+          SlideFadeInAnimation(
+            duration: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 100),
+            beginOffset: const Offset(0, 0.1),
+            child: FadeInText.body(
+              text: 'Enter verification code received via SMS',
+              fontSize: AppSizes.fontSizeMedium,
+              duration: const Duration(milliseconds: 300),
+              delay: const Duration(milliseconds: 100),
+            ),
           ),
 
-          const SizedBox(height: AppSizes.spacingXXLarge),
+          const SizedBox(height: AppSizes.spacingXLarge),
 
           // OTP Input
-          AppInput(
-            controller: _otpController,
-            keyboardType: TextInputType.number,
-            labelText: 'OTP',
-            hintText: 'Enter 6 digits',
-            maxLength: 6,
-            showCounterText: true,
-            onChanged: (value) {
-              if (value.length == 6) {
-                _handleVerify();
-              }
-            },
+          SlideFadeInAnimation(
+            duration: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 200),
+            beginOffset: const Offset(0, 0.1),
+            child: AppOtpInput(
+              controller: _otpController,
+              error: _errorMessage,
+              onCompleted: _handleVerify,
+              onChanged: (value) {
+                if (_errorMessage != null) {
+                  setState(() {
+                    _errorMessage = null;
+                  });
+                }
+              },
+            ),
           ),
 
-          const SizedBox(height: AppSizes.spacingXXLarge),
-
-          // Verify Button
-          AppButton(text: 'Verify', onPressed: _handleVerify),
-
-          const SizedBox(height: AppSizes.spacingLarge),
+          const SizedBox(height: AppSizes.spacingMedium),
 
           // Resend OTP
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Haven't received the code? ",
-                style: TextStyle(
-                  fontSize: AppSizes.fontSizeMedium,
-                  color: isDarkMode
-                      ? AppColors.dark.mediumGrayColor
-                      : AppColors.light.mediumGrayColor,
-                ),
-              ),
-              GestureDetector(
-                onTap: _handleResend,
-                child: Text(
-                  'Resend',
-                  style: TextStyle(
+          Container(
+            child: _resendCountdown > 0
+                ? FadeInText.body(
+                    text:
+                        "Didn't receive codes? Resend in ${_resendCountdown}s",
                     fontSize: AppSizes.fontSizeMedium,
-                    color: isDarkMode
-                        ? AppColors.dark.primaryColor
-                        : AppColors.light.primaryColor,
-                    fontWeight: FontWeight.w600,
+                    duration: const Duration(milliseconds: 300),
+                    delay: const Duration(milliseconds: 100),
+                  )
+                : ScaleAnimationTapWrapper(
+                    onTap: _handleResend,
+                    child: FadeInText.body(
+                      text: "Didn't receive codes? Resend Now",
+                      fontSize: AppSizes.fontSizeMedium,
+                      duration: const Duration(milliseconds: 300),
+                      delay: const Duration(milliseconds: 100),
+                    ),
                   ),
-                ),
-              ),
-            ],
           ),
         ],
       ),

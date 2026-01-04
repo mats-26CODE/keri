@@ -45,5 +45,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to set your profile picture</string>
+	<!-- Location permissions for maps and nearby locations -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location to show nearby delivery riders.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We use your location to show nearby delivery riders.</string>
 </dict>
 </plist>

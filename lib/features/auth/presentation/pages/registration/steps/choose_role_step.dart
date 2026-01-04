@@ -23,14 +23,14 @@ class ChooseRoleStep extends ConsumerWidget {
           SizedBox(height: AppSizes.spacingMedium),
           // Title
           SlideFadeInAnimation(
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 300),
             delay: const Duration(milliseconds: 100),
-            beginOffset: const Offset(0, 0.3),
+            beginOffset: const Offset(0, 0.1),
             child: FadeInText.heading(
               text: 'How will you use the app',
               fontSize: AppSizes.fontSizeTitleXXLarge,
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 300),
+              delay: const Duration(milliseconds: 100),
             ),
           ),
 
@@ -40,17 +40,17 @@ class ChooseRoleStep extends ConsumerWidget {
           FadeInText.body(
             text: 'Choose the option that best describes you.',
             fontSize: AppSizes.fontSizeLarge,
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 100),
           ),
 
           const SizedBox(height: AppSizes.spacingLarge),
 
           // Personal Use Option
           SlideFadeInAnimation(
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 400),
-            beginOffset: const Offset(-0.3, 0),
+            duration: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 100),
+            beginOffset: const Offset(0, 0.1),
             child: AppTogglePill(
               text: UserRole.personal.description,
               isSelected: registrationData.userRole == UserRole.personal,
@@ -75,9 +75,9 @@ class ChooseRoleStep extends ConsumerWidget {
 
           // Business Use Option
           SlideFadeInAnimation(
-            duration: const Duration(milliseconds: 500),
-            delay: const Duration(milliseconds: 500),
-            beginOffset: const Offset(0.3, 0),
+            duration: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 100),
+            beginOffset: const Offset(0, 0.1),
             child: AppTogglePill(
               text: UserRole.business.description,
               isSelected: registrationData.userRole == UserRole.business,

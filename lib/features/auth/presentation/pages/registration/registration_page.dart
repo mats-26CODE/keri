@@ -8,7 +8,7 @@ import '../../../../../shared/widgets/buttons/app_icon_button.dart';
 import '../../../../../shared/widgets/indicators/app_page_indicator.dart';
 import '../../models/registration_data.dart';
 import '../../providers/registration_provider.dart';
-import '../../widgets/modals/terms_acceptance_bottom_sheet.dart';
+import '../../widgets/modals/terms_acceptance_modal.dart';
 import 'steps/choose_role_step.dart';
 import 'steps/personal_profile_step.dart';
 import 'steps/business_profile_step.dart';
@@ -74,7 +74,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
 
     // Show terms acceptance before profile setup
     if (currentStep == 0) {
-      final accepted = await TermsAcceptanceBottomSheet.show(context);
+      final accepted = await TermsAcceptanceModal.show(context);
       if (accepted != true) return;
     }
 
@@ -166,6 +166,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                     // Back Button (only show after first step)
                     if (currentStep > 0)
                       Expanded(
+                        flex: 1,
                         child: AppButton(
                           text: 'Back',
                           onPressed: _handleBack,
@@ -185,6 +186,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                       const SizedBox(width: AppSizes.spacingMedium),
                     // Next/Continue Button
                     Expanded(
+                      flex: 2,
                       child: AppButton(
                         text: currentStep == 0 ? 'Continue' : 'Next',
                         onPressed: _handleNext,
