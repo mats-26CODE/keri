@@ -7,7 +7,15 @@ class AppSizes {
   static const double screenPaddingX = 20.0;
   static const double screenPaddingY = 20.0;
 
+  // Padding
+  static const double paddingTiny = 4.0;
+  static const double paddingSmall = 8.0;
+  static const double paddingMedium = 12.0;
+  static const double paddingLarge = 16.0;
+  static const double paddingXLarge = 20.0;
+
   // Font sizes
+  static const double fontSizeTiny = 10.0;
   static const double fontSizeSmall = 12.0;
   static const double fontSizeRegular = 14.0;
   static const double fontSizeMedium = 16.0;
@@ -15,6 +23,7 @@ class AppSizes {
   static const double fontSizeXLarge = 20.0;
   static const double fontSizeXXLarge = 24.0;
   static const double fontSizeTitle = 28.0;
+  static const double fontSizeTitleLarge = 24.0;
   static const double fontSizeTitleXLarge = 32.0;
   static const double fontSizeTitleXXLarge = 36.0;
 

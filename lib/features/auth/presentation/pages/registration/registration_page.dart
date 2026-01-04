@@ -9,7 +9,7 @@ import '../../../../../shared/widgets/buttons/app_icon_button.dart';
 import '../../../../../shared/widgets/indicators/app_page_indicator.dart';
 import '../../models/registration_data.dart';
 import '../../providers/registration_provider.dart';
-import '../../../../../shared/modals/terms_acceptance_modal.dart';
+import '../../widgets/terms_acceptance_bottom_sheet.dart';
 import 'steps/choose_role_step.dart';
 import 'steps/personal_profile_step.dart';
 import 'steps/business_profile_step.dart';
@@ -94,7 +94,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
 
     // Show terms acceptance before profile setup
     if (currentStep == 0) {
-      final accepted = await TermsAcceptanceModal.show(context);
+      final accepted = await TermsAcceptanceBottomSheet.show(context);
       if (accepted != true) return;
     }
 

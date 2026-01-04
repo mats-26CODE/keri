@@ -3,6 +3,7 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/sign_in_page.dart';
 import '../../features/auth/presentation/pages/registration/registration_page.dart';
+import '../../features/home/presentation/pages/navigation_page.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -18,13 +19,7 @@ class AppRouter {
       case '/register':
         return MaterialPageRoute(builder: (_) => const RegistrationPage());
       case '/home':
-        // TODO: Create home page
-        return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(child: Text('Home Page - Coming Soon')),
-          ),
-        );
-      // Add more routes as needed
+        return MaterialPageRoute(builder: (_) => const NavigationPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
