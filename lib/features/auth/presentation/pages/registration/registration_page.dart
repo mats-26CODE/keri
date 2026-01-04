@@ -9,7 +9,7 @@ import '../../../../../shared/widgets/buttons/app_icon_button.dart';
 import '../../../../../shared/widgets/indicators/app_page_indicator.dart';
 import '../../models/registration_data.dart';
 import '../../providers/registration_provider.dart';
-import '../../widgets/modals/terms_acceptance_modal.dart';
+import '../../../../../shared/modals/terms_acceptance_modal.dart';
 import 'steps/choose_role_step.dart';
 import 'steps/personal_profile_step.dart';
 import 'steps/business_profile_step.dart';
