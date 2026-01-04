@@ -30,6 +30,11 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    // Reset registration state when page opens
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(registrationStepProvider.notifier).reset();
+      ref.read(registrationProvider.notifier).reset();
+    });
   }
 
   @override
@@ -144,92 +149,105 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
     final currentStep = ref.watch(registrationStepProvider);
     final steps = _getSteps();
 
-    return Scaffold(
-      backgroundColor: isDarkMode
-          ? AppColors.dark.background
-          : AppColors.light.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Header with back button and progress indicators
-            Padding(
-              padding: const EdgeInsets.all(AppSizes.screenPaddingX),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Back Button
-                  AppIconButton(
-                    icon: const HugeIcon(
-                      icon: HugeIcons.strokeRoundedArrowLeft02,
-                      size: AppSizes.iconSizeLarge,
-                    ),
-                    onPressed: _handleBack,
-                    isOutlined: true,
-                    size: AppSizes.iconSizeLarge,
-                    borderColor: Colors.transparent,
-                    iconColor: isDarkMode
-                        ? AppColors.dark.icon
-                        : AppColors.light.icon,
-                  ),
-                  // Progress Indicators
-                  AppPageIndicator(
-                    totalSteps: steps.length,
-                    currentStep: currentStep,
-                    isDarkMode: isDarkMode,
-                  ),
-                ],
-              ),
-            ),
-
-            // Steps Content
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: steps,
-              ),
-            ),
-
-            // Navigation Buttons (hide only for OTP step)
-            if (currentStep != steps.length - 1)
+    return PopScope(
+      canPop: currentStep == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          // If we actually popped (only happens on step 0), reset state
+          ref.read(registrationStepProvider.notifier).reset();
+          ref.read(registrationProvider.notifier).reset();
+        } else {
+          // If we didn't pop (step > 0), go to previous step
+          _handleBack();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: isDarkMode
+            ? AppColors.dark.background
+            : AppColors.light.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Header with back button and progress indicators
               Padding(
                 padding: const EdgeInsets.all(AppSizes.screenPaddingX),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Back Button (only show after first step)
-                    if (currentStep > 0)
-                      Expanded(
-                        flex: 1,
-                        child: AppButton(
-                          text: 'Back',
-                          onPressed: _handleBack,
-                          isOutlined: true,
-                          backgroundColor: isDarkMode
-                              ? AppColors.dark.background
-                              : AppColors.light.background,
-                          textColor: isDarkMode
-                              ? AppColors.dark.text
-                              : AppColors.light.text,
-                          borderColor: isDarkMode
-                              ? AppColors.dark.grayishBorderColor
-                              : AppColors.light.grayishBorderColor,
-                        ),
+                    // Back Button
+                    AppIconButton(
+                      icon: const HugeIcon(
+                        icon: HugeIcons.strokeRoundedArrowLeft02,
+                        size: AppSizes.iconSizeLarge,
                       ),
-                    if (currentStep > 0)
-                      const SizedBox(width: AppSizes.spacingMedium),
-                    // Next/Continue Button
-                    Expanded(
-                      flex: 2,
-                      child: AppButton(
-                        text: _getButtonText(),
-                        onPressed: _handleNext,
-                      ),
+                      onPressed: _handleBack,
+                      isOutlined: true,
+                      size: AppSizes.iconSizeLarge,
+                      borderColor: Colors.transparent,
+                      iconColor: isDarkMode
+                          ? AppColors.dark.icon
+                          : AppColors.light.icon,
+                    ),
+                    // Progress Indicators
+                    AppPageIndicator(
+                      totalSteps: steps.length,
+                      currentStep: currentStep,
+                      isDarkMode: isDarkMode,
                     ),
                   ],
                 ),
               ),
-          ],
+
+              // Steps Content
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: steps,
+                ),
+              ),
+
+              // Navigation Buttons (hide only for OTP step)
+              if (currentStep != steps.length - 1)
+                Padding(
+                  padding: const EdgeInsets.all(AppSizes.screenPaddingX),
+                  child: Row(
+                    children: [
+                      // Back Button (only show after first step)
+                      if (currentStep > 0)
+                        Expanded(
+                          flex: 1,
+                          child: AppButton(
+                            text: 'Back',
+                            onPressed: _handleBack,
+                            isOutlined: true,
+                            backgroundColor: isDarkMode
+                                ? AppColors.dark.background
+                                : AppColors.light.background,
+                            textColor: isDarkMode
+                                ? AppColors.dark.text
+                                : AppColors.light.text,
+                            borderColor: isDarkMode
+                                ? AppColors.dark.grayishBorderColor
+                                : AppColors.light.grayishBorderColor,
+                          ),
+                        ),
+                      if (currentStep > 0)
+                        const SizedBox(width: AppSizes.spacingMedium),
+                      // Next/Continue Button
+                      Expanded(
+                        flex: 2,
+                        child: AppButton(
+                          text: _getButtonText(),
+                          onPressed: _handleNext,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
