@@ -25,6 +25,12 @@ class AppInput extends StatelessWidget {
   final double? customBorderRadius;
   final TextStyle? customTextStyle;
   final Color? cursorColor;
+  final Color? customEnabledBorderColor;
+  final Color? customFocusedBorderColor;
+  final bool hideBoxShadow;
+  final double? customHeight;
+  final BorderSide? customEnabledBorderSide;
+  final BorderSide? customFocusedBorderSide;
 
   const AppInput({
     super.key,
@@ -49,6 +55,12 @@ class AppInput extends StatelessWidget {
     this.customBorderRadius,
     this.customTextStyle,
     this.cursorColor,
+    this.customEnabledBorderColor,
+    this.customFocusedBorderColor,
+    this.hideBoxShadow = false,
+    this.customHeight,
+    this.customEnabledBorderSide,
+    this.customFocusedBorderSide,
   });
 
   @override
@@ -71,6 +83,7 @@ class AppInput extends StatelessWidget {
           SizedBox(height: AppSizes.spacingTiny),
         ],
         Container(
+          height: customHeight,
           decoration: BoxDecoration(
             color:
                 customBackgroundColor ??
@@ -80,15 +93,17 @@ class AppInput extends StatelessWidget {
             borderRadius: BorderRadius.circular(
               customBorderRadius ?? AppSizes.radiusLarge,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: isDarkMode
-                    ? AppColors.dark.primarishShadowColor
-                    : AppColors.light.grayishShadowColor,
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            boxShadow: hideBoxShadow
+                ? null
+                : [
+                    BoxShadow(
+                      color: isDarkMode
+                          ? AppColors.dark.primarishShadowColor
+                          : AppColors.light.grayishShadowColor,
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
           ),
           child: TextField(
             controller: controller,
@@ -159,42 +174,60 @@ class AppInput extends StatelessWidget {
                   width: 2,
                 ),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  customBorderRadius ?? AppSizes.radiusLarge,
-                ),
-                borderSide: error != null
-                    ? BorderSide(
-                        color: isDarkMode
-                            ? AppColors.dark.errorFadeColor
-                            : AppColors.light.errorColor,
-                        width: 2,
-                      )
-                    : BorderSide(
-                        color: isDarkMode
-                            ? AppColors.dark.darkBorderColor
-                            : AppColors.light.grayishBorderColor,
-                        width: 2,
+              enabledBorder: customEnabledBorderSide != null
+                  ? UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        customBorderRadius ?? AppSizes.radiusLarge,
                       ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  customBorderRadius ?? AppSizes.radiusLarge,
-                ),
-                borderSide: error != null
-                    ? BorderSide(
-                        color: isDarkMode
-                            ? AppColors.dark.errorFadeColor
-                            : AppColors.light.errorColor,
-                        width: 2,
-                      )
-                    : BorderSide(
-                        color: isDarkMode
-                            ? AppColors.dark.primaryColor.withAlpha(100)
-                            : AppColors.light.primaryColor.withAlpha(100),
-                        width: 2,
+                      borderSide: customEnabledBorderSide!,
+                    )
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        customBorderRadius ?? AppSizes.radiusLarge,
                       ),
-              ),
+                      borderSide: error != null
+                          ? BorderSide(
+                              color: isDarkMode
+                                  ? AppColors.dark.errorFadeColor
+                                  : AppColors.light.errorColor,
+                              width: 2,
+                            )
+                          : BorderSide(
+                              color:
+                                  customEnabledBorderColor ??
+                                  (isDarkMode
+                                      ? AppColors.dark.darkBorderColor
+                                      : AppColors.light.grayishBorderColor),
+                              width: 2,
+                            ),
+                    ),
+              focusedBorder: customFocusedBorderSide != null
+                  ? UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        customBorderRadius ?? AppSizes.radiusLarge,
+                      ),
+                      borderSide: customFocusedBorderSide!,
+                    )
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        customBorderRadius ?? AppSizes.radiusLarge,
+                      ),
+                      borderSide: error != null
+                          ? BorderSide(
+                              color: isDarkMode
+                                  ? AppColors.dark.errorFadeColor
+                                  : AppColors.light.errorColor,
+                              width: 2,
+                            )
+                          : BorderSide(
+                              color:
+                                  customFocusedBorderColor ??
+                                  (isDarkMode
+                                      ? AppColors.dark.primaryColor.withAlpha(100)
+                                      : AppColors.light.primaryColor.withAlpha(100)),
+                              width: 2,
+                            ),
+                    ),
               filled: true,
               fillColor:
                   customBackgroundColor ??

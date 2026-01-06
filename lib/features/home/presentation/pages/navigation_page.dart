@@ -33,13 +33,13 @@ class NavigationPage extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
               color: isDarkMode
-                  ? AppColors.dark.darkSurfaceGrayColor.withOpacity(0.8)
-                  : AppColors.light.pureWhiteColor.withOpacity(0.8),
+                  ? AppColors.dark.darkSurfaceGrayColor.withAlpha(200)
+                  : AppColors.light.pureWhiteColor.withAlpha(200),
               border: Border(
                 top: BorderSide(
                   color: isDarkMode
-                      ? AppColors.dark.grayishBorderColor.withOpacity(0.3)
-                      : AppColors.light.grayishBorderColor.withOpacity(0.3),
+                      ? AppColors.dark.grayishBorderColor.withAlpha(30)
+                      : AppColors.light.grayishBorderColor.withAlpha(30),
                   width: 1,
                 ),
               ),
@@ -48,7 +48,7 @@ class NavigationPage extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSizes.screenPaddingX,
-                  vertical: AppSizes.paddingSmall,
+                  vertical: AppSizes.paddingTiny,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -127,8 +127,8 @@ class NavigationPage extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? (isDarkMode
-                          ? AppColors.dark.primaryColor.withAlpha(120)
-                          : AppColors.light.primaryColor.withAlpha(100))
+                          ? AppColors.dark.primaryColor.withAlpha(40)
+                          : AppColors.light.primaryColor.withAlpha(20))
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(AppSizes.radiusMd),
               ),
