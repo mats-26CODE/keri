@@ -8,16 +8,15 @@ import '../../../../core/utils/app_text_styles.dart';
 import '../../../../shared/widgets/animations/scale_animation_tap_wrapper.dart';
 import '../../../../shared/widgets/buttons/app_button.dart';
 
-class DeliveryRequestBottomSheet extends ConsumerStatefulWidget {
-  const DeliveryRequestBottomSheet({super.key});
+class DeliveryRequestPanel extends ConsumerStatefulWidget {
+  const DeliveryRequestPanel({super.key});
 
   @override
-  ConsumerState<DeliveryRequestBottomSheet> createState() =>
-      _DeliveryRequestBottomSheetState();
+  ConsumerState<DeliveryRequestPanel> createState() =>
+      _DeliveryRequestPanelState();
 }
 
-class _DeliveryRequestBottomSheetState
-    extends ConsumerState<DeliveryRequestBottomSheet> {
+class _DeliveryRequestPanelState extends ConsumerState<DeliveryRequestPanel> {
   final PanelController _panelController = PanelController();
   final TextEditingController _destinationController = TextEditingController();
   final FocusNode _destinationFocusNode = FocusNode();

@@ -22,6 +22,7 @@ class AppProfilePicture extends StatefulWidget {
   final Color? editButtonBackgroundColor;
   final bool showBorder;
   final bool showShadow;
+  final Alignment alignment;
 
   const AppProfilePicture({
     super.key,
@@ -38,6 +39,7 @@ class AppProfilePicture extends StatefulWidget {
     this.editButtonBackgroundColor,
     this.showBorder = true,
     this.showShadow = true,
+    this.alignment = Alignment.centerLeft,
   });
 
   @override
@@ -329,7 +331,20 @@ class _AppProfilePictureState extends State<AppProfilePicture>
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    Widget profileWidget = ScaleTransition(
+    // Calculate the actual widget size
+    final double actualSize;
+    if (widget.enableRotatingBorder) {
+      final effectiveBorderWidth =
+          widget.borderWidth ?? (widget.size * 0.0667).clamp(4.0, 12.0);
+      // Total size = profile size + border width on each side
+      actualSize = widget.size + (effectiveBorderWidth * 2);
+    } else {
+      actualSize = widget.size;
+    }
+
+    // Build the core profile widget
+    // Note: Edit button is added separately when rotating border is enabled
+    final Widget coreProfileWidget = ScaleTransition(
       scale: _scaleAnimation,
       child: SizedBox(
         width: widget.size,
@@ -338,98 +353,161 @@ class _AppProfilePictureState extends State<AppProfilePicture>
           clipBehavior: Clip.none,
           children: [
             _buildProfileContent(isDarkMode),
-            if (widget.showEditButton) _buildEditButton(isDarkMode, context),
+            // Only add edit button here if rotating border is disabled
+            if (widget.showEditButton && !widget.enableRotatingBorder)
+              _buildEditButton(isDarkMode, context),
           ],
         ),
       ),
     );
 
-    // Wrap with rotating border if enabled
-    if (widget.enableRotatingBorder) {
-      final effectiveBorderWidth = widget.borderWidth ?? 8.0;
-      final containerSize = widget.size + (effectiveBorderWidth * 4);
+    // Build the inner content (always centered within the container)
+    Widget innerContent = Center(child: coreProfileWidget);
 
-      profileWidget = SizedBox(
-        width: containerSize,
-        height: containerSize,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Glow effect behind rotating border
-            Container(
-              width: containerSize,
-              height: containerSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        (isDarkMode
-                                ? AppColors.dark.primaryColor
-                                : AppColors.light.primaryColor)
-                            .withAlpha(60),
-                    blurRadius: 30,
-                    spreadRadius: 5,
+    // If rotating border is enabled, wrap with additional containers
+    if (widget.enableRotatingBorder) {
+      final effectiveBorderWidth =
+          widget.borderWidth ?? (widget.size * 0.0667).clamp(4.0, 12.0);
+
+      innerContent = Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          // Glow effect behind rotating border
+          Container(
+            width: actualSize,
+            height: actualSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color:
+                      (isDarkMode
+                              ? AppColors.dark.primaryColor
+                              : AppColors.light.primaryColor)
+                          .withAlpha(60),
+                  blurRadius: 30,
+                  spreadRadius: 5,
+                ),
+              ],
+            ),
+          ),
+          // Background container
+          Container(
+            width: actualSize,
+            height: actualSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isDarkMode
+                  ? AppColors.dark.background
+                  : AppColors.light.background,
+            ),
+            child: Center(
+              child: Container(
+                width: widget.size,
+                height: widget.size,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      (isDarkMode
+                              ? AppColors.dark.primaryColor
+                              : AppColors.light.primaryColor)
+                          .withAlpha(20),
+                      (isDarkMode
+                              ? AppColors.dark.primaryColor
+                              : AppColors.light.primaryColor)
+                          .withAlpha(5),
+                    ],
                   ),
-                ],
+                ),
+                child: Center(child: coreProfileWidget),
               ),
             ),
-            // Rotating border
-            RotatingBorderAnimation(
-              borderWidth: effectiveBorderWidth,
-              duration: const Duration(seconds: 4),
-              topColor: isDarkMode
-                  ? AppColors.dark.primaryColor
-                  : AppColors.light.primaryColor,
-              rightColor: isDarkMode
-                  ? AppColors.dark.warningColor
-                  : AppColors.light.warningColor,
-              bottomColor: isDarkMode
-                  ? AppColors.dark.successColor
-                  : AppColors.light.successColor,
-              leftColor: isDarkMode
-                  ? AppColors.dark.primaryDeepColor
-                  : AppColors.light.primaryDeepColor,
+          ),
+          // Rotating border on top
+          RotatingBorderAnimation(
+            borderWidth: effectiveBorderWidth,
+            duration: const Duration(seconds: 4),
+            topColor: isDarkMode
+                ? AppColors.dark.primaryColor
+                : AppColors.light.primaryColor,
+            rightColor: isDarkMode
+                ? AppColors.dark.warningColor
+                : AppColors.light.warningColor,
+            bottomColor: isDarkMode
+                ? AppColors.dark.successColor
+                : AppColors.light.successColor,
+            leftColor: isDarkMode
+                ? AppColors.dark.primaryDeepColor
+                : AppColors.light.primaryDeepColor,
+            child: SizedBox(width: actualSize, height: actualSize),
+          ),
+          // Edit button on top of everything when enabled
+          if (widget.showEditButton)
+            Positioned.fill(
               child: Center(
-                child: Container(
-                  width: widget.size + (effectiveBorderWidth * 2),
-                  height: widget.size + (effectiveBorderWidth * 2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isDarkMode
-                        ? AppColors.dark.background
-                        : AppColors.light.background,
-                  ),
-                  child: Center(
+                child: SizedBox(
+                  width: widget.size,
+                  height: widget.size,
+                  child: ScaleAnimationTapWrapper(
+                    onTap: widget.onEditPressed ?? () => _pickImage(context),
                     child: Container(
-                      width: widget.size,
-                      height: widget.size,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            (isDarkMode
-                                    ? AppColors.dark.primaryColor
-                                    : AppColors.light.primaryColor)
-                                .withAlpha(20),
-                            (isDarkMode
-                                    ? AppColors.dark.primaryColor
-                                    : AppColors.light.primaryColor)
-                                .withAlpha(5),
-                          ],
+                        color: isDarkMode
+                            ? AppColors.dark.primaryColor.withAlpha(40)
+                            : AppColors.light.primaryColor.withAlpha(40),
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: EdgeInsets.all(widget.size * 0.08),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color:
+                                (widget.editButtonBackgroundColor ??
+                                        (isDarkMode
+                                            ? AppColors.dark.primaryColor
+                                            : AppColors.light.primaryColor))
+                                    .withAlpha(200),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    (widget.editButtonBackgroundColor ??
+                                            (isDarkMode
+                                                ? AppColors.dark.primaryColor
+                                                : AppColors.light.primaryColor))
+                                        .withAlpha(150),
+                                blurRadius: 20,
+                                spreadRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: HugeIcon(
+                            icon: HugeIcons.strokeRoundedImageAdd01,
+                            size: widget.size * 0.2,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                      child: Center(child: profileWidget),
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+        ],
       );
     }
 
-    return Center(child: profileWidget);
+    // Always wrap in a fixed-size container that respects parent alignment
+    // Use Align to ensure it doesn't center when parent stretches
+    return Align(
+      alignment: widget.alignment,
+      child: SizedBox(
+        width: actualSize,
+        height: actualSize,
+        child: innerContent,
+      ),
+    );
   }
 }

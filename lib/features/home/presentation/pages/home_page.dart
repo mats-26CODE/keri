@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:keri/shared/widgets/loading/loading_spinner.dart';
 import '../../../auth/presentation/providers/location_provider.dart';
 import '../../../../core/values/app_colors.dart';
 import '../../../../core/values/app_sizes.dart';
-import '../widgets/delivery_request_bottom_sheet.dart';
+import '../../../../shared/widgets/animations/scale_animation_tap_wrapper.dart';
+import '../../../../shared/widgets/buttons/app_icon_button.dart';
+import '../../../../shared/widgets/profile/app_profile_picture.dart';
+import '../widgets/delivery_request_panel.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -113,139 +117,68 @@ class _HomePageState extends ConsumerState<HomePage> {
                   color: isDarkMode
                       ? AppColors.dark.background
                       : AppColors.light.background,
-                  child: const Center(child: CircularProgressIndicator()),
+                  child: Center(child: LoadingSpinner()),
                 ),
 
-          // Top Bar
+          // Top Right Action Buttons (stacked vertically)
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.screenPaddingX),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // Profile Button
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDarkMode
-                          ? AppColors.dark.darkSurfaceGrayColor.withAlpha(140)
-                          : AppColors.light.pureWhiteColor.withAlpha(140),
-                      borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withAlpha(10),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          // Navigate to profile or show menu
-                        },
-                        borderRadius: BorderRadius.circular(
-                          AppSizes.radiusLarge,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSizes.paddingSmall),
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: isDarkMode
-                                ? AppColors.dark.primaryColor.withAlpha(120)
-                                : AppColors.light.primaryColor.withAlpha(100),
-                            child: HugeIcon(
-                              icon: HugeIcons.strokeRoundedUser,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
+                  // Profile Picture Button
+                  ScaleAnimationTapWrapper(
+                    onTap: () {
+                      // Navigate to profile or show menu
+                    },
+                    child: AppProfilePicture(
+                      size: AppSizes.iconButtonSize,
+                      showEditButton: true,
+                      showBorder: true,
+                      showShadow: true,
+                      enableRotatingBorder: true,
+                      borderWidth: 2,
+                      alignment: Alignment.centerRight,
                     ),
                   ),
 
-                  // Action Buttons
-                  Row(
-                    children: [
-                      // Recenter button
-                      _buildActionButton(
-                        icon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedNavigator01,
-                          size: 20,
-                        ),
-                        onTap: () {
-                          if (locationState.currentLocation != null &&
-                              _mapController != null) {
-                            _mapController!.animateCamera(
-                              CameraUpdate.newLatLng(
-                                locationState.currentLocation!,
-                              ),
-                            );
-                          }
-                        },
-                        isDarkMode: isDarkMode,
-                      ),
-                      const SizedBox(width: AppSizes.spacingSmall),
-                      // Share button
-                      _buildActionButton(
-                        icon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedShare08,
-                          size: 20,
-                        ),
-                        onTap: () {
-                          // Share location
-                        },
-                        isDarkMode: isDarkMode,
-                      ),
-                    ],
+                  const SizedBox(height: AppSizes.spacingSmall),
+
+                  // Navigation/Recenter Button
+                  AppIconButton(
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedNavigation03),
+                    onPressed: () {
+                      if (locationState.currentLocation != null &&
+                          _mapController != null) {
+                        _mapController!.animateCamera(
+                          CameraUpdate.newLatLng(
+                            locationState.currentLocation!,
+                          ),
+                        );
+                      }
+                    },
+                    size: AppSizes.iconButtonSize,
+                  ),
+
+                  const SizedBox(height: AppSizes.spacingSmall),
+
+                  // Share Button
+                  AppIconButton(
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedShare08),
+                    onPressed: () {
+                      // Share location
+                    },
+                    size: AppSizes.iconButtonSize,
                   ),
                 ],
               ),
             ),
           ),
 
-          // Draggable Bottom Sheet
-          const DeliveryRequestBottomSheet(),
+          // Delivery Request Panel
+          const DeliveryRequestPanel(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required dynamic icon,
-    required VoidCallback onTap,
-    required bool isDarkMode,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isDarkMode
-            ? AppColors.dark.darkSurfaceGrayColor.withAlpha(140)
-            : AppColors.light.pureWhiteColor.withAlpha(140),
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.paddingMedium),
-            child: IconTheme(
-              data: IconThemeData(
-                color: isDarkMode ? AppColors.dark.icon : AppColors.light.icon,
-                size: AppSizes.iconSizeMedium,
-              ),
-              child: icon,
-            ),
-          ),
-        ),
       ),
     );
   }

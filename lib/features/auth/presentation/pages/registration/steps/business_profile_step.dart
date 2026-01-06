@@ -132,6 +132,7 @@ class _BusinessProfileStepState extends ConsumerState<BusinessProfileStep> {
             onImagePicked: _handleImagePicked,
             enableRotatingBorder: true,
             borderWidth: 4,
+            alignment: Alignment.center,
           ),
 
           const SizedBox(height: AppSizes.spacingXLarge),
